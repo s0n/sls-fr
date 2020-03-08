@@ -1,0 +1,30 @@
+
+service: serverless-flask
+
+plugins:
+  - serverless-python-requirements
+  - serverless-wsgi
+
+
+custom:
+  wsgi:
+    app: app.app
+    packRequirements: false
+  pythonRequirements:
+    dockerizePip: non-linux
+
+
+provider:
+  role: arn:aws:iam::440725378438:role/lambda_role
+  name: aws
+  runtime: python3.6
+  stage: dev
+  region: eu-west-1
+
+
+functions:
+  app:
+    handler: wsgi.handler
+    events:
+      - http: ANY /
+      - http: 'ANY {proxy+}'
