@@ -9,14 +9,13 @@ import pprint
 import csv
 import io
 import boto3
+from botocore.exceptions import ClientError
+import logging
 
 app = Flask(__name__)
-@app.route('/', methods=['POST'])
+@app.route('/convert', methods=['POST'])
 def myFunc() :
     if 'file' not in request.files:
-        s3_client = boto3.client('s3')
-        with open("requirements.txt", "rb") as f:
-            s3_client.upload_fileobj(f, 'fil-rouge-aws', 'hello.txt')
         return "passez svp le fichier en paramètre"
 
     #Chargement du fichier pris en praramètre dans l'Url
@@ -24,7 +23,7 @@ def myFunc() :
     metadata = {}
     data = {}
     data_csv = []
-    s3_client = boto3.client('s3')
+    s3 = boto3.client("s3")
     print(myFile.content_type)
 
     #Gestion des fichiers TXT
@@ -33,6 +32,11 @@ def myFunc() :
         metadata['nom du fichier'] = myFile.filename
         metadata['type de fichier'] = myFile.content_type
         data['data'] = myFile.read()
+        #chargement du fichier dans S3
+        try :
+            s3.put_object(Body=myFile.stream.read(), Bucket='fil-rouge-aws', Key=myFile.filename)
+        except ClientError as e :
+            logging.error(e)
         return jsonify(metadonnes = metadata, donnees = data['data'].decode("utf-8"))
         
     #Gestion des fichiers CSV
@@ -43,8 +47,8 @@ def myFunc() :
             reader = csv.DictReader(csv_file, delimiter=',')
             for row in reader:
                 data_csv.append(row)
-        return jsonify(metadonnes = metadata, donnees = data_csv)
-        
+            return jsonify(metadonnes = metadata, donnees = data_csv)
+
     #Gestion des fichiers PDF
     elif myFile.content_type == 'application/pdf':
         metadata['nom du fichier'] = myFile.filename
@@ -52,16 +56,18 @@ def myFunc() :
         with io.BytesIO(myFile.read()) as pdf_file:
             encoded_string = base64.b64encode(pdf_file.read())
             data['data'] = encoded_string
-            #print (encoded_string)
-        #return "hello"
+        s3.put_object(Body=myFile.stream.read(), Bucket='fil-rouge-aws', Key=myFile.filename)
         return jsonify(metadonnes = metadata, donnees = data['data'].decode("utf-8"))
         
     #Gestion des fichiers PNG
     elif myFile.content_type == 'image/png':
-        #print(type(myFile.read()))
-        #print(pytesseract.image_to_string(myFile.read()))
-        #print(pytesseract.image_to_string(Image.open('node-js.png')))
-        return "hello from png file"
+        metadata['nom du fichier'] = myFile.filename
+        metadata['type de fichier'] = myFile.content_type
+        with io.BytesIO(myFile.read()) as png_file:
+            encoded_string = base64.b64encode(png_file.read())
+            data['data'] = encoded_string
+        s3.put_object(Body=myFile.stream.read(), Bucket='fil-rouge-aws', Key=myFile.filename)
+        return jsonify(metadonnes = metadata, donnees = data['data'].decode("utf-8"))
 
     #Default case
     else:

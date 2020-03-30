@@ -69,7 +69,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/serverless-flask/dev/1583489054701-2020-03-06T10:04:14.701Z/serverless-flask.zip"
+          "S3Key": "serverless/serverless-flask/dev/1585521321608-2020-03-29T22:35:21.608Z/serverless-flask.zip"
         },
         "FunctionName": "serverless-flask-dev-app",
         "Handler": "wsgi_handler.handler",
@@ -82,14 +82,14 @@
         "AppLogGroup"
       ]
     },
-    "AppLambdaVersionV3cmAvchi1Rkm0Zm5TShwIWcuXNHK9mJO2EiZB85fM": {
+    "AppLambdaVersionSPZlfkGUj9jHjuJ7hJ0tXD2Xu3wATRmqqTuER0FyrQs": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "tk9S+YCbJ+ufxMhA5I14tF/qmMx03GvCLbTEkD14I+Y="
+        "CodeSha256": "YjCbc3+Sq0+HBeIIaknTKxKiJGy8W/c1NlxLUFtfU7E="
       }
     },
     "ApiGatewayRestApi": {
@@ -208,7 +208,7 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1583489044749": {
+    "ApiGatewayDeployment1585521295248": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -268,7 +268,7 @@
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersionV3cmAvchi1Rkm0Zm5TShwIWcuXNHK9mJO2EiZB85fM"
+        "Ref": "AppLambdaVersionSPZlfkGUj9jHjuJ7hJ0tXD2Xu3wATRmqqTuER0FyrQs"
       }
     },
     "ServiceEndpoint": {
