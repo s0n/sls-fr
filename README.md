@@ -24,3 +24,6 @@ il faut au préalable avoir installé virtualenv (`pip install virtualenv`)
 avec la commande `sls depoy`
 ### 5- faites des requêtes vers l'application déployée
 cf. Procédure de test
+
+
+ngbangoAgent3: j7MvgjbIEk)p-V6vdX2ama$!IeNL(6@K
